@@ -6,7 +6,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
 import { useRouter } from "next/router";
 
- function Header() {
+ function Header({placeholder}) {
   const [searchInput, setSearchInput] = useState("");
   const [startDate, setStartDate] = useState(new Date());  
   const [endDate, setEndDate] = useState(new Date());   
@@ -28,6 +28,18 @@ import { useRouter } from "next/router";
       setSearchInput("");
   };
 
+  const search = () => {
+      router.push({
+          pathname: "/search",
+          query: {
+              location: searchInput,
+              startDate: startDate.toISOString(),
+              endDate: endDate.toISOString(),
+              noOfGuests,
+          },
+      });
+  }
+
   return (
 
   <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10">
@@ -46,7 +58,7 @@ import { useRouter } from "next/router";
     {/* Middle - Search */}
 
     <div className="flex items-center md:border-2 rounded-full py-2 md:shadow-sm">
-        <input onChange={(e) => setSearchInput(e.target.value)} value={searchInput} className="pl-5 bg-transparent outline-none flex-grow text-sm text-gray-600 placeholder-gray-400" placeholder="Start your search" type="text" />
+        <input onChange={(e) => setSearchInput(e.target.value)} value={searchInput} className="pl-5 bg-transparent outline-none flex-grow text-sm text-gray-600 placeholder-gray-400" placeholder={placeholder || "Start your search"} type="text" />
         <SearchIcon className="hidden md:inline-flex h-8 bg-red-400 text-white rounded-full p-2 cursor-pointer md:mx-2"/>
     </div>
 
@@ -78,7 +90,7 @@ import { useRouter } from "next/router";
             <div className="flex">
              <button onClick={resetInput} className="flex-grow text-gray-500">Cancel
              </button>
-             <button className="flex-grow text-red-400">Search
+             <button onClick={search} className="flex-grow text-red-400">Search
              </button>
             </div>
         </div>
